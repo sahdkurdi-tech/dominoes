@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خوێندنەوەی دۆمینە</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" media="screen and (max-width: 768px)" href="mobile.css">
+</head>
+<body>
+    <div class="container">
+        <h1>سایتێک بۆ خوێندنەوەی یاری دۆمینە</h1>
+
+        <div class="add-players">
+            <input type="number" id="playerCount" min="1" placeholder="ژ. یاریزان">
+            <button onclick="addPlayers()">
+                <i class="fas fa-plus"></i> زیادکردنی یاریزان
+            </button>
+        </div>
+
+        <div id="players" class="players-grid"></div>
+
+        <div class="controls hidden" id="gameControls">
+            <button class="finish" onclick="finishGame()">
+                <i class="fas fa-flag-checkered"></i> یارییەکە تەواو
+            </button>
+            <button class="reset" onclick="resetGame()">
+                <i class="fas fa-sync-alt"></i> نوێ کردنەوە
+            </button>
+        </div>
+
+        <div id="finalResults" class="final-results hidden"></div>
+    </div>
+
+    <audio id="confirmSound">
+        <source src="confirm-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

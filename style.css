@@ -1,0 +1,359 @@
+/* ناساندنی فۆنتی NRT */
+@font-face {
+    font-family: 'NRT';
+    src: url('NRT-Reg.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --bg-dark: #07070a;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --gold-main: #d4af37;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'NRT', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    direction: rtl;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #ffffff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* بەشی زیادکردنی یاریزان */
+.add-players {
+    background: #111116;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 20px;
+    display: inline-flex;
+    gap: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+}
+
+.add-players input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    text-align: center;
+    width: 180px;
+    transition: all 0.3s ease;
+}
+
+.add-players input:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.add-players button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.add-players button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+/* خشتەی یاریزانەکان */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* کارتی یاریزانەکان لەگەڵ جوڵەی ڕووناکییەکە */
+.player-section {
+    position: relative;
+    padding: 30px 25px;
+    border-radius: 24px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ئەمە باکگراوندی ڕەشە کە دەکەوێتە سەروو ڕووناکییەکەوە بۆ ئەوەی تەنها چوارچێوەکەی دەرکەوێت */
+.player-section::after {
+    content: '';
+    position: absolute;
+    inset: 2px; /* ئەستووری چوارچێوە ڕووناکییەکە */
+    background: #0f0f13;
+    border-radius: 22px;
+    z-index: 1;
+}
+
+/* ئەمە ڕووناکییە سپییەکەیە کە دەسوڕێتەوە */
+.player-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent, 
+        rgba(255, 255, 255, 1) 45deg, 
+        transparent 90deg, 
+        transparent 180deg, 
+        rgba(255, 255, 255, 1) 225deg, 
+        transparent 270deg
+    );
+    animation: spinLight 4s linear infinite;
+    z-index: 0;
+}
+
+/* هەموو ناوەڕۆکی کارتەکە دەکەوێتە سەروو باکگراوندەکەوە */
+.player-section > * {
+    position: relative;
+    z-index: 2;
+}
+
+.player-section:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.05);
+}
+
+.player-section.added {
+    animation: slideUpFade 0.6s ease-out forwards;
+}
+
+.player-section h3 {
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.score-input input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    color: var(--text-main);
+    padding: 15px 10px;
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.score-input input:focus {
+    outline: none;
+    border-bottom-color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* دوگمەکانی خاڵەکان (هەر یەکە و ڕەنگێک) */
+.value-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.value-buttons button {
+    background: #000;
+    border: 2px solid; /* ئەستووری چوارچێوەی دوگمەکان */
+    padding: 16px 0;
+    border-radius: 14px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* ڕەنگی دوگمەکان بە جیا */
+.value-buttons button[value="5"] {
+    border-color: #00f0ff; /* شین */
+    color: #00f0ff;
+}
+.value-buttons button[value="5"]:hover {
+    background: rgba(0, 240, 255, 0.15);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.value-buttons button[value="10"] {
+    border-color: #b829ea; /* مۆر */
+    color: #b829ea;
+}
+.value-buttons button[value="10"]:hover {
+    background: rgba(184, 41, 234, 0.15);
+    box-shadow: 0 0 20px rgba(184, 41, 234, 0.4);
+}
+
+.value-buttons button[value="15"] {
+    border-color: #ff2a7a; /* پەمەیی */
+    color: #ff2a7a;
+}
+.value-buttons button[value="15"]:hover {
+    background: rgba(255, 42, 122, 0.15);
+    box-shadow: 0 0 20px rgba(255, 42, 122, 0.4);
+}
+
+.value-buttons button[value="20"] {
+    border-color: #ff003c; /* سوور */
+    color: #ff003c;
+}
+.value-buttons button[value="20"]:hover {
+    background: rgba(255, 0, 60, 0.15);
+    box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+}
+
+.value-buttons button[value="25"] {
+    grid-column: span 2;
+    border-color: #ffd700; /* ئاڵتوونی/زەرد */
+    color: #ffd700;
+}
+.value-buttons button[value="25"]:hover {
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.value-buttons button:active {
+    transform: scale(0.95);
+}
+
+/* کۆی گشتی */
+.total {
+    background: #000;
+    color: white;
+    padding: 18px;
+    border-radius: 16px;
+    font-size: 1.8rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.total.animate {
+    animation: flashScore 0.4s ease;
+    background: white;
+    color: black;
+}
+
+/* دوگمەکانی کۆنتڕۆڵ */
+.controls button {
+    background: #111116;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 16px 35px;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.controls button.finish:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.controls button.reset:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* مۆداڵ (پەنجەرەی دڵنیابوونەوە) */
+.modal {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: #0f0f13;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 40px;
+    border-radius: 24px;
+}
+
+#confirmValue {
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.modal-buttons button {
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+}
+
+#yesBtn {
+    background: white;
+    color: black;
+    border: none;
+    font-weight: bold;
+}
+
+/* ئەنجامی کۆتایی */
+.final-results {
+    background: #111116;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 35px;
+}
+
+.final-results th { background: rgba(255, 255, 255, 0.05); color: white; }
+.final-results td { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* ئەنیمەیشنەکان */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUpFade { 
+    from { opacity: 0; transform: translateY(40px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+@keyframes flashScore { 
+    0% { transform: scale(1); } 
+    50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,255,255,0.6); } 
+    100% { transform: scale(1); } 
+}
+@keyframes spinLight { 
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); } 
+}
+
+.hidden { display: none !important; }

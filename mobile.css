@@ -1,0 +1,78 @@
+@media screen and (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+    }
+
+    .add-players {
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .add-players input, 
+    .add-players button {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.2rem;
+    }
+
+    .players-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .player-section {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    .score-input input {
+        font-size: 1.2rem;
+    }
+
+    .value-buttons {
+        gap: 10px;
+    }
+
+    .value-buttons button {
+        padding: 16px 0;
+        font-size: 1.3rem;
+        border-radius: 12px;
+    }
+
+    .total {
+        font-size: 1.6rem;
+        padding: 15px;
+    }
+
+    .controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+
+    .controls button {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+        width: 95%;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .modal-buttons button {
+        width: 100%;
+        padding: 16px;
+    }
+}
