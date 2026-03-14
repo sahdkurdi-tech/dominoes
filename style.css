@@ -357,3 +357,14 @@ h1 {
 }
 
 .hidden { display: none !important; }
+
+/* گۆڕینی ڕەنگی باکگراوندی کارتی یاریزانی دووەم */
+.player-section:nth-child(2)::after {
+    background: #0e0035 !important;
+}
+
+/* ئەگەر بتەوێت کەمێک ڕەنگی ناوەوەی (بۆکسەکانی نووسین و کۆی گشتی) یاریزانی دووەمیش لەگەڵ شینەکە بگونجێت */
+.player-section:nth-child(2) .score-input input,
+.player-section:nth-child(2) .total {
+    background: rgba(0, 0, 50, 0.6) !important;
+}
