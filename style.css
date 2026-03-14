@@ -359,12 +359,46 @@ h1 {
 .hidden { display: none !important; }
 
 /* گۆڕینی ڕەنگی باکگراوندی کارتی یاریزانی دووەم */
+/* --- دیزاینی تایبەت و ڕاقی بۆ کارتی یاریزانی دووەم (تیمی شین) --- */
+
+/* گۆڕینی باکگراوندی ناوەوەی کارتەکە بۆ شینێکی تۆخی قووڵ (Gradient Navy) */
 .player-section:nth-child(2)::after {
-    background: #0e0035 !important;
+    background: linear-gradient(145deg, #000033, #000011) !important;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
 }
 
-/* ئەگەر بتەوێت کەمێک ڕەنگی ناوەوەی (بۆکسەکانی نووسین و کۆی گشتی) یاریزانی دووەمیش لەگەڵ شینەکە بگونجێت */
-.player-section:nth-child(2) .score-input input,
+/* گۆڕینی ڕووناکییە سووڕاوەکەی پشتی یاریزانی دووەم بۆ شینێکی بریقەدار */
+.player-section:nth-child(2)::before {
+    background: conic-gradient(
+        transparent, 
+        rgba(0, 191, 255, 1) 45deg, 
+        transparent 90deg, 
+        transparent 180deg, 
+        rgba(0, 191, 255, 1) 225deg, 
+        transparent 270deg
+    ) !important;
+}
+
+/* گونجاندنی بۆکسی ناوی یاریزان لەگەڵ تیمی شین */
+.player-section:nth-child(2) .score-input input {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-bottom: 2px solid rgba(0, 191, 255, 0.2) !important;
+}
+
+.player-section:nth-child(2) .score-input input:focus {
+    border-bottom-color: #00bfff !important;
+    background: rgba(0, 191, 255, 0.05) !important;
+}
+
+/* گونجاندنی بۆکسی کۆی گشتی خاڵەکان */
 .player-section:nth-child(2) .total {
-    background: rgba(0, 0, 50, 0.6) !important;
+    background: rgba(0, 0, 20, 0.8) !important;
+    border: 1px solid rgba(0, 191, 255, 0.2) !important;
+}
+
+/* ئەنیمەیشنی کاتی زیادکردنی خاڵ بۆ یاریزانی دووەم */
+.player-section:nth-child(2) .total.animate {
+    background: #0044aa !important;
+    color: white !important;
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.5) !important;
 }
