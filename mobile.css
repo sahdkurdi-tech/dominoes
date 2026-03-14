@@ -1,78 +1,84 @@
 @media screen and (max-width: 768px) {
     body {
-        padding: 20px 10px;
+        padding: 15px 10px;
     }
 
     h1 {
-        font-size: 2.2rem;
-        margin-bottom: 30px;
+        font-size: 1.8rem; /* بچووککردنەوەی سەردێڕ */
+        margin-bottom: 20px;
     }
 
+    /* بەشی زیادکردنی یاریزان */
     .add-players {
         flex-direction: column;
         width: 100%;
-        padding: 20px;
-        gap: 15px;
+        padding: 15px;
+        gap: 10px;
+        margin-bottom: 25px;
     }
 
     .add-players input, 
     .add-players button {
         width: 100%;
-        padding: 16px;
-        font-size: 1.2rem;
+        padding: 12px;
+        font-size: 1.1rem;
     }
 
+    /* خشتەی یاریزانەکان */
     .players-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 15px; /* کەمکردنەوەی بۆشایی نێوان کارتەکان */
+        margin-bottom: 30px;
     }
 
+    /* کارتی یاریزانەکە */
     .player-section {
-        padding: 25px 20px;
-        border-radius: 20px;
+        padding: 15px 20px; /* کەمکردنەوەی بۆشایی ناوەوەی کارتەکە بۆ ئەوەی باڵای کورت بێتەوە */
+        border-radius: 18px;
     }
 
+    .player-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    /* شوێنی نووسینی ناو */
     .score-input input {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        padding: 10px 10px;
+        margin-bottom: 15px;
     }
 
+    /* دوگمەکانی خاڵەکان */
     .value-buttons {
-        gap: 10px;
+        gap: 8px; /* بۆشایی نێوان دوگمەکان کەمکرایەوە */
+        margin-bottom: 15px;
     }
 
     .value-buttons button {
-        padding: 16px 0;
-        font-size: 1.3rem;
+        padding: 10px 0; /* بەرزی دوگمەکان کەمکرایەوە */
+        font-size: 1.2rem;
+        border-radius: 10px;
+        border-width: 1px; /* هێڵی چوارچێوەی دوگمەکان کەمێک تەنک کرایەوە */
+    }
+
+    /* کۆی گشتی */
+    .total {
+        font-size: 1.4rem;
+        padding: 12px;
         border-radius: 12px;
     }
 
-    .total {
-        font-size: 1.6rem;
-        padding: 15px;
-    }
-
+    /* دوگمەکانی کۆنتڕۆڵ (کۆتایی و نوێکردنەوە) */
     .controls {
         flex-direction: column;
         width: 100%;
-        gap: 15px;
+        gap: 10px;
     }
 
     .controls button {
         width: 100%;
-        padding: 18px;
-    }
-
-    .modal-content {
-        padding: 30px 20px;
-        width: 95%;
-    }
-
-    .modal-buttons {
-        flex-direction: column;
-    }
-
-    .modal-buttons button {
-        width: 100%;
-        padding: 16px;
+        padding: 14px;
+        font-size: 1.1rem;
     }
 }
