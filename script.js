@@ -65,7 +65,7 @@ function addPlayers() {
     currentPlayerId = 1;
 }
 
-// ئێستا ئەم فەنکشنە ڕاستەوخۆ خاڵەکە زیاد دەکات بەبێ هیچ پرسیارکردنێک
+// زیادکردنی ڕاستەوخۆی خاڵەکان بەبێ پرسیارکردن
 function addScore(playerId, value) {
     addToScore(playerId, value);
 }
@@ -79,11 +79,30 @@ function addToScore(playerId, value) {
     
     updateTotalDisplay(playerId);
     
-    // تشغيل الصوت
-    const sound = document.getElementById('confirmSound');
-    if (sound) {
-        sound.currentTime = 0;
-        sound.play().catch(e => console.log("Audio play failed:", e));
+    // لێرەدا دەنگەکان جیا دەکەینەوە بەپێی ئەو بەهایەی زیاد کراوە
+    let soundFile = '';
+    switch (value) {
+        case 5:
+            soundFile = 'sound1.mp3';
+            break;
+        case 10:
+            soundFile = 'sound2.mp3';
+            break;
+        case 15:
+            soundFile = 'sound3.mp3';
+            break;
+        case 20:
+            soundFile = 'sound4.mp3';
+            break;
+        case 25:
+            soundFile = 'sound5.mp3';
+            break;
+    }
+
+    // ئەگەر فایلەکە دیاری کرابوو، لێی بدە
+    if (soundFile !== '') {
+        const audio = new Audio(soundFile);
+        audio.play().catch(e => console.log("کێشەیەک هەیە لە لێدانی دەنگەکە:", e));
     }
 }
 
@@ -213,7 +232,6 @@ let wakeLock = null;
 
 async function requestWakeLock() {
     try {
-        // پشکنین دەکات بزانێت ئایا وێبگەڕەکە (Browser) ئەم تایبەتمەندییە پشتگیری دەکات یان نا
         if ('wakeLock' in navigator) {
             wakeLock = await navigator.wakeLock.request('screen');
             console.log('شاشەکە چیتر ناکوژێتەوە');
@@ -227,10 +245,8 @@ async function requestWakeLock() {
     }
 }
 
-// کاتێک پەڕەکە بە تەواوی کرایەوە، ڕاستەوخۆ داوای کراوەیی شاشە دەکات
 document.addEventListener('DOMContentLoaded', requestWakeLock);
 
-// ئەگەر بەکارهێنەر چووە دەرەوەی سایتەکە و گەڕایەوە، دووبارە شاشەکە چالاک دەکاتەوە
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         requestWakeLock();
