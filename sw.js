@@ -12,7 +12,9 @@ const urlsToCache = [
     './sound3.mp3',
     './sound4.mp3',
     './sound5.mp3',
-    './manifest.json'
+    './manifest.json',
+    './icon-192.png', // ئەم دوانە زیاد کران
+    './icon-512.png'  // ئەم دوانە زیاد کران
 ];
 
 self.addEventListener('install', event => {
