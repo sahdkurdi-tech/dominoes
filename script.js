@@ -3,8 +3,9 @@ const PREDEFINED_VALUES = [5, 10, 15, 20, 25];
 let gameState = {
     isActive: false,
     players: {},
-    isMuted: false // ئەمەمان زیادکرد
+    isMuted: false
 };
+
 window.onload = function () {
     loadGameState();
 };
@@ -24,7 +25,6 @@ function loadGameState() {
     if (saved) {
         gameState = JSON.parse(saved);
         
-        // ڕاستەوخۆ دوای هێنانەوەی داتاکان، ڕەنگی دوگمەی دەنگەکە ڕێکدەخەینەوە
         updateMuteUI(); 
         
         if (gameState.isActive) {
@@ -32,7 +32,6 @@ function loadGameState() {
             return;
         }
     } else {
-        // ئەگەر یەکەم جار بوو بکرێتەوە، با دۆخی دەنگەکە هەر ڕێکبخات
         updateMuteUI();
     }
     
@@ -137,7 +136,8 @@ function toggleScoreMode(id) {
 
 function addScore(playerId, value) {
     const player = gameState.players[playerId];
-    const finalValue = player.isMinus ? -value : value;
+    const isReducing = player.isMinus; // ذخیره وضعیت کاهش امتیاز
+    const finalValue = isReducing ? -value : value;
     
     player.score += finalValue;
     player.history.push(finalValue);
@@ -148,25 +148,27 @@ function addScore(playerId, value) {
     updateTotalDisplay(playerId);
     renderHistory(playerId);
     
-    if (player.isMinus) {
+    if (isReducing) {
         toggleScoreMode(playerId);
     } else {
         saveGameState(); 
     }
 
-    let soundFile = '';
-    switch (value) {
-        case 5: soundFile = 'sound1.mp3'; break;
-        case 10: soundFile = 'sound2.mp3'; break;
-        case 15: soundFile = 'sound3.mp3'; break;
-        case 20: soundFile = 'sound4.mp3'; break;
-        case 25: soundFile = 'sound5.mp3'; break;
-    }
+    // شرط جدید: فقط در صورتی که در حال کم کردن امتیاز نباشیم صدا پخش شود
+    if (!isReducing && !gameState.isMuted) {
+        let soundFile = '';
+        switch (value) {
+            case 5: soundFile = 'sound1.mp3'; break;
+            case 10: soundFile = 'sound2.mp3'; break;
+            case 15: soundFile = 'sound3.mp3'; break;
+            case 20: soundFile = 'sound4.mp3'; break;
+            case 25: soundFile = 'sound5.mp3'; break;
+        }
 
-// تەنها ئەگەر میوت نەبوو دەنگەکە لێدەدات
-    if (soundFile !== '' && !gameState.isMuted) {
-        const audio = new Audio(soundFile);
-        audio.play().catch(e => console.log("کێشەی دەنگ:", e));
+        if (soundFile !== '') {
+            const audio = new Audio(soundFile);
+            audio.play().catch(e => console.log("خطا در پخش صدا:", e));
+        }
     }
 }
 
@@ -224,7 +226,6 @@ function finishGame() {
 
     showFinalResults();
 
-    // دۆزینەوەی براوە (ئەو کەسەی زۆرترین خاڵی هەیە) لە کاتی کۆتایی پێهێناندا
     let highestScore = -Infinity;
     let winners = [];
     
@@ -235,7 +236,6 @@ function finishGame() {
         }
     }
 
-    // پشکنین بۆ ئەوەی بزانین ئایا یەک کەسە یان چەند کەسێک یەکسانن
     for (let id in gameState.players) {
         const player = gameState.players[id];
         const nameInput = document.getElementById(`name${id}`);
@@ -331,7 +331,6 @@ document.addEventListener('click', function enableNoSleep() {
     }
 }, false);
 
-// خستنەگەڕی Service Worker بۆ ئەوەی وەک ئەپ کاربکات
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')

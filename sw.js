@@ -1,4 +1,5 @@
-const CACHE_NAME = 'domino-cache-v1';
+// گۆڕینی ڤێرژن بۆ v2
+const CACHE_NAME = 'domino-cache-v3';
 const urlsToCache = [
     './',
     './index.html',
@@ -15,9 +16,25 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+    self.skipWaiting(); // ئەمە فۆرسی دەکات یەکسەر ڤێرژنە نوێیەکە جێبەجێ ببێت
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => cache.addAll(urlsToCache))
+    );
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== CACHE_NAME) {
+                        console.log('سڕینەوەی کاشی کۆن:', cache);
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
     );
 });
 
