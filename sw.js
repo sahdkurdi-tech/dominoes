@@ -1,5 +1,5 @@
-// گۆڕینی ڤێرژن بۆ v2
-const CACHE_NAME = 'domino-cache-v3';
+// گۆڕینی ڤێرژن بۆ v4 بۆ ئەوەی مۆبایلەکە گۆڕانکارییەکان بخوێنێتەوە
+const CACHE_NAME = 'domino-cache-v4';
 const urlsToCache = [
     './',
     './index.html',
@@ -13,8 +13,8 @@ const urlsToCache = [
     './sound4.mp3',
     './sound5.mp3',
     './manifest.json',
-    './icon-192.png', // ئەم دوانە زیاد کران
-    './icon-512.png'  // ئەم دوانە زیاد کران
+    './icon-192.png', 
+    './icon-512.png'  
 ];
 
 self.addEventListener('install', event => {
