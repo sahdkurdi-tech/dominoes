@@ -50,7 +50,7 @@ h1 {
     text-shadow: 0 2px 15px rgba(255, 255, 255, 0.1);
 }
 
-/* بەشی زیادکردنی یاریزان */
+/* بەشی زیادکردنی یاریزان (بە دوگمەکانی ٢، ٣، ٤) */
 .add-players {
     background: #111116;
     border: 1px solid rgba(255,255,255,0.1);
@@ -60,44 +60,32 @@ h1 {
     gap: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     margin-bottom: 40px;
-}
-
-.add-players input {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    text-align: center;
-    width: 180px;
-    transition: all 0.3s ease;
-}
-
-.add-players input:focus {
-    outline: none;
-    border-color: white;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 600px; /* ڕێگریکردن لە زۆر درێژبوونەوەی دوگمەکان */
 }
 
 .add-players button {
-    background: white;
-    color: black;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 12px;
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 15px 25px;
+    border-radius: 14px;
     font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-weight: bold;
     transition: all 0.3s ease;
+    flex: 1; /* بۆ ئەوەی قەبارەی هەرسێکیان وەک یەک بێت */
 }
 
 .add-players button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
 }
 
 /* خشتەی یاریزانەکان */
@@ -298,7 +286,7 @@ h1 {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* مۆداڵ (پەنجەرەی دڵنیابوونەوە) */
+/* مۆداڵ (پەنجەرەی دڵنیابوونەوە - هەرچەندە لامان برد لە کۆدەکاندا، بەڵام بۆ ئیحتیات دەیهێڵینەوە) */
 .modal {
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(8px);
@@ -358,7 +346,6 @@ h1 {
 
 .hidden { display: none !important; }
 
-/* گۆڕینی ڕەنگی باکگراوندی کارتی یاریزانی دووەم */
 /* --- دیزاینی تایبەت و ڕاقی بۆ کارتی یاریزانی دووەم (تیمی شین) --- */
 
 /* گۆڕینی باکگراوندی ناوەوەی کارتەکە بۆ شینێکی تۆخی قووڵ (Gradient Navy) */

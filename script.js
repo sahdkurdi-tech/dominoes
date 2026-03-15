@@ -9,20 +9,8 @@ window.onload = function () {
     document.querySelector('.add-players').classList.remove('hidden');
 };
 
-function addPlayers() {
-    const countInput = document.getElementById('playerCount');
-    const count = parseInt(countInput.value);
-
-    if (!count || count < 1) {
-        alert("تکایە ژمارەیەکی دروست بنووسە (لە ١ تا ٢٠)");
-        return;
-    }
-
-    if (count > 20) {
-        alert("زیاتر لە ٢٠ یاریزان ناتوانیت زیاد بکەیت");
-        return;
-    }
-
+// وەرگرتنی ژمارەی یاریزانەکان ڕاستەوخۆ لە دوگمەکانەوە
+function addPlayers(count) {
     const playersContainer = document.getElementById("players");
     playersContainer.innerHTML = '';
 
@@ -61,7 +49,6 @@ function addPlayers() {
     // إخفاء قسم إضافة اللاعبين بعد بدء اللعبة
     document.querySelector('.add-players').classList.add('hidden');
     
-    countInput.value = '';
     currentPlayerId = 1;
 }
 

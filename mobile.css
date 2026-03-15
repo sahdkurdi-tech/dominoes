@@ -8,20 +8,20 @@
         margin-bottom: 20px;
     }
 
-    /* بەشی زیادکردنی یاریزان */
+    /* بەشی زیادکردنی یاریزان (ڕێکخستنی سێ دوگمەکە بۆ سەر شاشەی مۆبایل) */
     .add-players {
-        flex-direction: column;
+        flex-direction: column; /* دوگمەکان دەخاتە سەر یەکتر */
         width: 100%;
         padding: 15px;
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 25px;
     }
 
-    .add-players input, 
+    /* ئێستا تەنها دوگمە ماوە، بۆکسەکەمان سڕییەوە */
     .add-players button {
         width: 100%;
-        padding: 12px;
-        font-size: 1.1rem;
+        padding: 14px;
+        font-size: 1.2rem;
     }
 
     /* خشتەی یاریزانەکان */
@@ -56,7 +56,7 @@
     }
 
     .value-buttons button {
-        padding: 10px 0; /* بەرزی دوگمەکان کەمکرایەوە */
+        padding: 12px 0; /* بەرزی دوگمەکان گونجێنرا بۆ پەنجەدان لەسەر مۆبایل */
         font-size: 1.2rem;
         border-radius: 10px;
         border-width: 1px; /* هێڵی چوارچێوەی دوگمەکان کەمێک تەنک کرایەوە */
