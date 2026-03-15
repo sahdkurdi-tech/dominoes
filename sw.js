@@ -1,5 +1,5 @@
 // گۆڕینی ڤێرژن بۆ v6 بۆ ئەوەی هەموو فایلە نوێیەکان و ئەرشیفەکە بخوێنێتەوە
-const CACHE_NAME = 'domino-cache-v6';
+const CACHE_NAME = 'domino-cache-v6.1';
 const urlsToCache = [
     './',
     './index.html',

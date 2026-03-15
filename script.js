@@ -360,17 +360,18 @@ document.addEventListener('click', function enableNoSleep() {
 }, false);
 
 // خستنەگەڕی Service Worker و چاودێریکردنی ڤێرژنی نوێ
+// خستنەگەڕی Service Worker بە شێوەیەکی ڕاست و دروست
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime()).then(reg => {
+        // لێرە کاتە گۆڕاوەکەمان لابرد و تەنها ناوی فایلەکەمان هێشتەوە
+        navigator.serviceWorker.register('./sw.js').then(reg => {
             
-            // کاتێک ڤێرژنێکی نوێی sw.js دەدۆزرێتەوە
             reg.onupdatefound = () => {
                 const installingWorker = reg.installing;
                 installingWorker.onstatechange = () => {
+                    // تەنها ئەگەر ڤێرژنێکی نوێ هەبوو و پێشتر دانەیەک مۆدێل کرابوو ڕیفرێش بکات
                     if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        // یەکسەر پەڕەکە ڕیفرێش دەکاتەوە بۆ ئەوەی دیزاینە نوێیەکە پیشان بدات
-                        console.log('ڤێرژنێکی نوێ دۆزرایەوە! پەڕەکە ڕیفرێش دەبێتەوە...');
+                        console.log('ڤێرژنێکی نوێ دۆزرایەوە! پەڕەکە نوێ دەبێتەوە...');
                         window.location.reload();
                     }
                 };
