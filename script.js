@@ -1,96 +1,190 @@
 const PREDEFINED_VALUES = [5, 10, 15, 20, 25];
 
-let currentPlayerId = 1;
-
+let gameState = {
+    isActive: false,
+    players: {},
+    isMuted: false // ئەمەمان زیادکرد
+};
 window.onload = function () {
-    document.getElementById('players').innerHTML = '';
-    
-    // إظهار قسم إضافة اللاعبين عند التحميل
-    document.querySelector('.add-players').classList.remove('hidden');
+    loadGameState();
 };
 
-// وەرگرتنی ژمارەی یاریزانەکان ڕاستەوخۆ لە دوگمەکانەوە
+function saveGameState() {
+    for (let id in gameState.players) {
+        const nameInput = document.getElementById(`name${id}`);
+        if (nameInput) {
+            gameState.players[id].name = nameInput.value;
+        }
+    }
+    localStorage.setItem('dominoGameState', JSON.stringify(gameState));
+}
+
+function loadGameState() {
+    const saved = localStorage.getItem('dominoGameState');
+    if (saved) {
+        gameState = JSON.parse(saved);
+        
+        // ڕاستەوخۆ دوای هێنانەوەی داتاکان، ڕەنگی دوگمەی دەنگەکە ڕێکدەخەینەوە
+        updateMuteUI(); 
+        
+        if (gameState.isActive) {
+            renderGameFromState();
+            return;
+        }
+    } else {
+        // ئەگەر یەکەم جار بوو بکرێتەوە، با دۆخی دەنگەکە هەر ڕێکبخات
+        updateMuteUI();
+    }
+    
+    document.getElementById('players').innerHTML = '';
+    document.querySelector('.add-players').classList.remove('hidden');
+    document.getElementById('gameControls').classList.add('hidden');
+}
+
+function renderGameFromState() {
+    document.querySelector('.add-players').classList.add('hidden');
+    document.getElementById('gameControls').classList.remove('hidden');
+    const playersContainer = document.getElementById("players");
+    playersContainer.innerHTML = '';
+
+    for (let id in gameState.players) {
+        const player = gameState.players[id];
+        playersContainer.innerHTML += generatePlayerHTML(id, player.name);
+    }
+
+    for (let id in gameState.players) {
+        const player = gameState.players[id];
+        document.getElementById(`scoreInput${id}`).value = player.score;
+        
+        if (player.isMinus) {
+            document.getElementById(`valBtns${id}`).classList.add('minus-active');
+            document.getElementById(`toggleMode${id}`).textContent = 'گەڕانەوە (+)';
+            document.getElementById(`toggleMode${id}`).classList.add('active');
+        }
+        
+        updateTotalDisplay(id);
+        renderHistory(id);
+    }
+}
+
 function addPlayers(count) {
+    gameState.isActive = true;
+    gameState.players = {};
+    
     const playersContainer = document.getElementById("players");
     playersContainer.innerHTML = '';
 
     for (let i = 1; i <= count; i++) {
-        const id = currentPlayerId++;
-        const playerHTML = `
-            <div class="player-section" id="player-${id}">
-                <h3>یاریزانی ${id}</h3>
-                <div class="score-input">
-                    <label for="name${id}">ناوی یاریزان:</label>
-                    <input type="text" id="name${id}" placeholder="ناوەکەی بنووسە">
-                </div>
-                <div class="value-buttons">
-                    ${PREDEFINED_VALUES.map(val => `
-                        <button type="button" value="${val}" onclick="addScore(${id}, ${val})">
-                            ${val}
-                        </button>
-                    `).join('')}
-                </div>
-                <div class="total" id="total${id}">کۆی گشتی: 0</div>
-                <input type="hidden" id="scoreInput${id}" value="0">
-            </div>
-        `;
-        playersContainer.innerHTML += playerHTML;
+        const id = i;
+        gameState.players[id] = { name: "", score: 0, history: [], isMinus: false };
+        playersContainer.innerHTML += generatePlayerHTML(id, "");
         
-        // إضافة تأثير ظهور اللاعب
         setTimeout(() => {
             const playerElement = document.getElementById(`player-${id}`);
             if (playerElement) playerElement.classList.add('added');
         }, 100);
     }
 
-    // إظهار أزرار التحكم
     document.getElementById('gameControls').classList.remove('hidden');
-    
-    // إخفاء قسم إضافة اللاعبين بعد بدء اللعبة
     document.querySelector('.add-players').classList.add('hidden');
-    
-    currentPlayerId = 1;
+    saveGameState();
 }
 
-// زیادکردنی ڕاستەوخۆی خاڵەکان بەبێ پرسیارکردن
+function generatePlayerHTML(id, name) {
+    return `
+        <div class="player-section" id="player-${id}">
+            <div class="player-header">
+                <h3>یاریزانی ${id}</h3>
+                <button class="minus-toggle" id="toggleMode${id}" onclick="toggleScoreMode(${id})">کەمکردنەوە (-)</button>
+            </div>
+            <div class="score-input">
+                <input type="text" id="name${id}" value="${name}" placeholder="ناوی یاریزان" oninput="saveGameState()">
+            </div>
+            
+            <div class="value-buttons" id="valBtns${id}">
+                ${PREDEFINED_VALUES.map(val => `
+                    <button type="button" value="${val}" onclick="addScore(${id}, ${val})">
+                        ${val}
+                    </button>
+                `).join('')}
+            </div>
+            <div class="total" id="total${id}">کۆی گشتی: 0</div>
+            <input type="hidden" id="scoreInput${id}" value="0">
+            
+            <div class="history-log" id="history${id}"></div>
+        </div>
+    `;
+}
+
+function toggleScoreMode(id) {
+    const player = gameState.players[id];
+    player.isMinus = !player.isMinus;
+    
+    const btnContainer = document.getElementById(`valBtns${id}`);
+    const toggleBtn = document.getElementById(`toggleMode${id}`);
+    
+    if (player.isMinus) {
+        btnContainer.classList.add('minus-active');
+        toggleBtn.textContent = 'گەڕانەوە (+)';
+        toggleBtn.classList.add('active');
+    } else {
+        btnContainer.classList.remove('minus-active');
+        toggleBtn.textContent = 'کەمکردنەوە (-)';
+        toggleBtn.classList.remove('active');
+    }
+    saveGameState();
+}
+
 function addScore(playerId, value) {
-    addToScore(playerId, value);
-}
-
-function addToScore(playerId, value) {
-    const input = document.getElementById(`scoreInput${playerId}`);
-    if (!input) return;
+    const player = gameState.players[playerId];
+    const finalValue = player.isMinus ? -value : value;
     
-    const current = parseInt(input.value) || 0;
-    input.value = current + value;
+    player.score += finalValue;
+    player.history.push(finalValue);
+    
+    const input = document.getElementById(`scoreInput${playerId}`);
+    if (input) input.value = player.score;
     
     updateTotalDisplay(playerId);
+    renderHistory(playerId);
     
-    // لێرەدا دەنگەکان جیا دەکەینەوە بەپێی ئەو بەهایەی زیاد کراوە
-    let soundFile = '';
-    switch (value) {
-        case 5:
-            soundFile = 'sound1.mp3';
-            break;
-        case 10:
-            soundFile = 'sound2.mp3';
-            break;
-        case 15:
-            soundFile = 'sound3.mp3';
-            break;
-        case 20:
-            soundFile = 'sound4.mp3';
-            break;
-        case 25:
-            soundFile = 'sound5.mp3';
-            break;
+    if (player.isMinus) {
+        toggleScoreMode(playerId);
+    } else {
+        saveGameState(); 
     }
 
-    // ئەگەر فایلەکە دیاری کرابوو، لێی بدە
-    if (soundFile !== '') {
-        const audio = new Audio(soundFile);
-        audio.play().catch(e => console.log("کێشەیەک هەیە لە لێدانی دەنگەکە:", e));
+    let soundFile = '';
+    switch (value) {
+        case 5: soundFile = 'sound1.mp3'; break;
+        case 10: soundFile = 'sound2.mp3'; break;
+        case 15: soundFile = 'sound3.mp3'; break;
+        case 20: soundFile = 'sound4.mp3'; break;
+        case 25: soundFile = 'sound5.mp3'; break;
     }
+
+// تەنها ئەگەر میوت نەبوو دەنگەکە لێدەدات
+    if (soundFile !== '' && !gameState.isMuted) {
+        const audio = new Audio(soundFile);
+        audio.play().catch(e => console.log("کێشەی دەنگ:", e));
+    }
+}
+
+function renderHistory(id) {
+    const container = document.getElementById(`history${id}`);
+    if (!container) return;
+    
+    const player = gameState.players[id];
+    let html = '';
+    
+    player.history.forEach(val => {
+        const cssClass = val < 0 ? 'minus' : 'plus';
+        const sign = val > 0 ? '+' : '';
+        html += `<span class="history-item ${cssClass}">${sign}${val}</span>`;
+    });
+    
+    container.innerHTML = html;
+    container.scrollLeft = container.scrollWidth;
 }
 
 function updateTotalDisplay(playerId) {
@@ -111,13 +205,12 @@ function updateTotalDisplay(playerId) {
 }
 
 function resetGame() {
+    localStorage.removeItem('dominoGameState');
+    gameState = { isActive: false, players: {} };
+    
     document.getElementById('gameControls').classList.add('hidden');
     document.getElementById('finalResults').classList.add('hidden');
     document.getElementById('players').innerHTML = '';
-    currentPlayerId = 1;
-    
-    const allButtons = document.querySelectorAll('.value-buttons button');
-    allButtons.forEach(btn => btn.disabled = false);
     
     document.querySelector('.add-players').classList.remove('hidden');
 }
@@ -126,38 +219,39 @@ function finishGame() {
     const confirmation = confirm("دەتەوێت ئێستا یارییەکە تەواو بکەیت؟");
     if (!confirmation) return;
 
-    const allButtons = document.querySelectorAll('.value-buttons button');
+    const allButtons = document.querySelectorAll('.value-buttons button, .minus-toggle');
     allButtons.forEach(btn => btn.disabled = true);
 
     showFinalResults();
 
-    const winnerFound = checkForWinner();
-    if (!winnerFound) {
-        alert("تا ئێستا کەس سەرکەوتنی بەدەست نەهێناوە. ئەنجامی کۆتایی لە خشتەکەدا نیشان دراوە..");
+    // دۆزینەوەی براوە (ئەو کەسەی زۆرترین خاڵی هەیە) لە کاتی کۆتایی پێهێناندا
+    let highestScore = -Infinity;
+    let winners = [];
+    
+    for (let id in gameState.players) {
+        const player = gameState.players[id];
+        if (player.score > highestScore) {
+            highestScore = player.score;
+        }
     }
-}
 
-function checkForWinner() {
-    const WINNING_SCORE = 100;
-    const allPlayerSections = document.querySelectorAll('.player-section');
-    let winnerFound = false;
-
-    allPlayerSections.forEach((section) => {
-        const id = section.id.split('-')[1];
-        const input = document.getElementById(`scoreInput${id}`);
-        if (!input) return;
-        
-        const score = parseInt(input.value) || 0;
+    // پشکنین بۆ ئەوەی بزانین ئایا یەک کەسە یان چەند کەسێک یەکسانن
+    for (let id in gameState.players) {
+        const player = gameState.players[id];
         const nameInput = document.getElementById(`name${id}`);
         const name = nameInput?.value || `یاریزان ${id}`;
-
-        if (score >= WINNING_SCORE) {
-            alert(`🎉 براوەی... ${name}! (خاڵەکان: ${score})`);
-            winnerFound = true;
+        if (player.score === highestScore) {
+            winners.push(name);
         }
-    });
+    }
 
-    return winnerFound;
+    if (winners.length > 1) {
+        alert(`🤝 یارییەکە بە یەکسانبوون کۆتایی هات لە نێوان: ${winners.join(' و ')} بە (${highestScore}) خاڵ!`);
+    } else if (winners.length === 1) {
+        alert(`🎉 پیرۆزە! براوەی یارییەکە بریتییە لە: ${winners[0]} بە کۆکردنەوەی (${highestScore}) خاڵ!`);
+    }
+    
+    localStorage.removeItem('dominoGameState');
 }
 
 function showFinalResults() {
@@ -167,22 +261,15 @@ function showFinalResults() {
     resultsContainer.innerHTML = '';
     resultsContainer.classList.remove('hidden');
     
-    const allPlayerSections = document.querySelectorAll('.player-section');
-    let players = [];
-
-    allPlayerSections.forEach((section) => {
-        const id = section.id.split('-')[1];
-        const input = document.getElementById(`scoreInput${id}`);
-        if (!input) return;
-        
-        const score = parseInt(input.value) || 0;
+    let playersArr = [];
+    for (let id in gameState.players) {
+        const player = gameState.players[id];
         const nameInput = document.getElementById(`name${id}`);
         const name = nameInput?.value || `یاریزان ${id}`;
-        
-        players.push({ name, score });
-    });
+        playersArr.push({ name, score: player.score });
+    }
 
-    players.sort((a, b) => b.score - a.score);
+    playersArr.sort((a, b) => b.score - a.score);
 
     let html = `
         <h3>ئەنجامی کۆتایی</h3>
@@ -196,7 +283,7 @@ function showFinalResults() {
             <tbody>
     `;
     
-    players.forEach(p => {
+    playersArr.forEach(p => {
         html += `
             <tr>
                 <td>${p.name}</td>
@@ -213,20 +300,42 @@ function showFinalResults() {
     resultsContainer.innerHTML = html;
 }
 
-// --- بەشی ڕێگریکردن لە کوژانەوەی شاشە (بە شێوازی مسۆگەر NoSleep) ---
+function toggleMute() {
+    gameState.isMuted = !gameState.isMuted;
+    updateMuteUI();
+    saveGameState();
+}
+
+function updateMuteUI() {
+    const btn = document.getElementById('muteBtn');
+    if (!btn) return;
+    
+    if (gameState.isMuted) {
+        btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        btn.classList.add('muted');
+    } else {
+        btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        btn.classList.remove('muted');
+    }
+}
 
 var noSleep = new NoSleep();
 var isAwake = false;
 
-// مۆبایلەکان ڕێگە نادەن شاشە بە کراوەیی بهێڵرێتەوە تا بەکارهێنەر پەنجە نەدات لە شاشەکە
-// بۆیە هەر کاتێک یەکەم کلیک لەسەر سایتەکە کرا (بۆ نموونە کاتی کلیک کردن لە دوگمەکان)، ئەمە چالاک دەبێت
 document.addEventListener('click', function enableNoSleep() {
     if (!isAwake) {
-        noSleep.enable(); // شاشەکە بە کراوەیی دەهێڵێتەوە
+        noSleep.enable();
         isAwake = true;
         console.log("سیستەمی NoSleep چالاک بوو، شاشەکە ناکوژێتەوە");
-        
-        // لابردنی ئەم ئیڤێنتە بۆ ئەوەی تەنها یەکجار کار بکات
         document.removeEventListener('click', enableNoSleep, false);
     }
 }, false);
+
+// خستنەگەڕی Service Worker بۆ ئەوەی وەک ئەپ کاربکات
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('سیستەمی PWA چالاک بوو.'))
+            .catch(err => console.log('کێشە لە چالاککردنی PWA:', err));
+    });
+}
