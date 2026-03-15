@@ -1,5 +1,5 @@
 // گۆڕینی ڤێرژن بۆ v4 بۆ ئەوەی مۆبایلەکە گۆڕانکارییەکان بخوێنێتەوە
-const CACHE_NAME = 'domino-cache-v4';
+const CACHE_NAME = 'domino-cache-v5';
 const urlsToCache = [
     './',
     './index.html',
