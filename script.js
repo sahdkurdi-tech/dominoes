@@ -217,41 +217,69 @@ function resetGame() {
     document.querySelector('.add-players').classList.remove('hidden');
 }
 
+// پیشاندانی پەنجەرەی دڵنیابوونەوە
 function finishGame() {
-    const confirmation = confirm("دەتەوێت ئێستا یارییەکە تەواو بکەیت؟");
-    if (!confirmation) return;
+    document.getElementById('finishModal').classList.remove('hidden');
+}
+
+// داخستنی پەنجەرەی دڵنیابوونەوە
+function closeFinishModal() {
+    document.getElementById('finishModal').classList.add('hidden');
+}
+
+// کاتێک پەنجەی نا بە "بەڵێ، یارییەکە تەواو"
+function confirmFinishGame() {
+    // پەنجەرەکە لادەبەین
+    closeFinishModal();
 
     const allButtons = document.querySelectorAll('.value-buttons button, .minus-toggle');
     allButtons.forEach(btn => btn.disabled = true);
 
-    showFinalResults();
-
     let highestScore = -Infinity;
-    let winners = [];
+    let playersArr = [];
     
-    for (let id in gameState.players) {
-        const player = gameState.players[id];
-        if (player.score > highestScore) {
-            highestScore = player.score;
-        }
-    }
-
+    // کۆکردنەوەی خاڵەکان و زانیارییەکان
     for (let id in gameState.players) {
         const player = gameState.players[id];
         const nameInput = document.getElementById(`name${id}`);
         const name = nameInput?.value || `یاریزان ${id}`;
-        if (player.score === highestScore) {
-            winners.push(name);
+        
+        if (player.score > highestScore) {
+            highestScore = player.score;
         }
-    }
-
-    if (winners.length > 1) {
-        alert(`🤝 یارییەکە بە یەکسانبوون کۆتایی هات لە نێوان: ${winners.join(' و ')} بە (${highestScore}) خاڵ!`);
-    } else if (winners.length === 1) {
-        alert(`🎉 پیرۆزە! براوەی یارییەکە بریتییە لە: ${winners[0]} بە کۆکردنەوەی (${highestScore}) خاڵ!`);
+        
+        playersArr.push({
+            name: name,
+            score: player.score,
+            history: player.history
+        });
     }
     
-    localStorage.removeItem('dominoGameState');
+    // کات و بەروار
+    const now = new Date();
+    const dateString = now.toLocaleDateString('en-GB') + ' - ' + now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+
+    // داتای یارییەکە
+    const gameRecord = {
+        date: dateString,
+        timestamp: window.db ? firebase.firestore.FieldValue.serverTimestamp() : new Date(),
+        players: playersArr,
+        highestScore: highestScore
+    };
+    
+    // ناردنی بۆ فایربەیس
+    if(window.db) {
+        window.db.collection("games_archive").add(gameRecord).then(() => {
+            localStorage.removeItem('dominoGameState');
+            // چوونە ناو پەڕەی ئەرشیف ڕاستەوخۆ بێ ئەوەی ئالێرت پیشان بدات
+            window.location.href = 'archive.html';
+        }).catch((error) => {
+            console.error("هەڵە هەیە:", error);
+            alert("کێشەیەک ڕوویدا لە خەزنکردنی یارییەکە. دڵنیابەرەوە لە ئینتەرنێتەکەت.");
+        });
+    } else {
+        alert("فایربەیس نەبەستراوەتەوە بە باشی.");
+    }
 }
 
 function showFinalResults() {
@@ -331,10 +359,22 @@ document.addEventListener('click', function enableNoSleep() {
     }
 }, false);
 
+// خستنەگەڕی Service Worker و چاودێریکردنی ڤێرژنی نوێ
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('سیستەمی PWA چالاک بوو.'))
-            .catch(err => console.log('کێشە لە چالاککردنی PWA:', err));
+        navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime()).then(reg => {
+            
+            // کاتێک ڤێرژنێکی نوێی sw.js دەدۆزرێتەوە
+            reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // یەکسەر پەڕەکە ڕیفرێش دەکاتەوە بۆ ئەوەی دیزاینە نوێیەکە پیشان بدات
+                        console.log('ڤێرژنێکی نوێ دۆزرایەوە! پەڕەکە ڕیفرێش دەبێتەوە...');
+                        window.location.reload();
+                    }
+                };
+            };
+        }).catch(err => console.log('کێشە لە Service Worker:', err));
     });
 }
