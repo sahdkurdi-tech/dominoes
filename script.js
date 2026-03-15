@@ -226,29 +226,20 @@ function showFinalResults() {
     resultsContainer.innerHTML = html;
 }
 
-// --- بەشی ڕێگریکردن لە کوژانەوەی شاشە (Wake Lock) ---
+// --- بەشی ڕێگریکردن لە کوژانەوەی شاشە (بە شێوازی مسۆگەر NoSleep) ---
 
-let wakeLock = null;
+var noSleep = new NoSleep();
+var isAwake = false;
 
-async function requestWakeLock() {
-    try {
-        if ('wakeLock' in navigator) {
-            wakeLock = await navigator.wakeLock.request('screen');
-            console.log('شاشەکە چیتر ناکوژێتەوە');
-            
-            wakeLock.addEventListener('release', () => {
-                console.log('ڕێگری کوژانەوەی شاشە وەستا');
-            });
-        }
-    } catch (err) {
-        console.error(`کێشەیەک هەیە لە ڕێگریکردنی شاشە: ${err.message}`);
+// مۆبایلەکان ڕێگە نادەن شاشە بە کراوەیی بهێڵرێتەوە تا بەکارهێنەر پەنجە نەدات لە شاشەکە
+// بۆیە هەر کاتێک یەکەم کلیک لەسەر سایتەکە کرا (بۆ نموونە کاتی کلیک کردن لە دوگمەکان)، ئەمە چالاک دەبێت
+document.addEventListener('click', function enableNoSleep() {
+    if (!isAwake) {
+        noSleep.enable(); // شاشەکە بە کراوەیی دەهێڵێتەوە
+        isAwake = true;
+        console.log("سیستەمی NoSleep چالاک بوو، شاشەکە ناکوژێتەوە");
+        
+        // لابردنی ئەم ئیڤێنتە بۆ ئەوەی تەنها یەکجار کار بکات
+        document.removeEventListener('click', enableNoSleep, false);
     }
-}
-
-document.addEventListener('DOMContentLoaded', requestWakeLock);
-
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        requestWakeLock();
-    }
-});
+}, false);
