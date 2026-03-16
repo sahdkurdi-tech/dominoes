@@ -107,16 +107,21 @@ h1 {
 }
 
 /* باکگراوندی ناوەوەی کارت - تێکەڵکردنی ڕەنگی هەڵبژێردراو */
+/* باکگراوندی ناوەوەی کارت - دیزاینی شووشەیی و قووڵی 3D */
 .player-section::after {
     content: '';
     position: absolute;
     inset: 2px;
-    background: linear-gradient(145deg, rgba(var(--theme-rgb, 212, 175, 55), 0.15), #0f0f13);
+    /* گۆڕینی ڕەنگەکە لە تاریکەوە بۆ ڕەنگی هەڵبژێردراو بە نەرمی */
+    background: linear-gradient(160deg, rgba(var(--theme-rgb), 0.25), rgba(0, 0, 0, 0.8) 70%);
+    /* پێدانی لێواری لای سەرەوەی کارتەکە بە ڕەنگێکی کاڵ بۆ ئەوەی وەک 3D دەربکەوێت */
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), inset 0 -2px 10px rgba(var(--theme-rgb), 0.2);
+    backdrop-filter: blur(10px);
     border-radius: 22px;
     z-index: 1;
 }
 
-/* ڕووناکییە سووڕاوەکەی پشتی کارتەکە بە ڕەنگی هەڵبژێردراو */
+/* ڕووناکییە سووڕاوەکەی پشتی کارتەکە - نەرمتر و بریقەدارتر (Neon Effect) */
 .player-section::before {
     content: '';
     position: absolute;
@@ -126,13 +131,14 @@ h1 {
     height: 200%;
     background: conic-gradient(
         transparent, 
-        rgba(var(--theme-rgb, 212, 175, 55), 1) 45deg, 
+        rgba(var(--theme-rgb), 0.9) 45deg, 
         transparent 90deg, 
         transparent 180deg, 
-        rgba(var(--theme-rgb, 212, 175, 55), 1) 225deg, 
+        rgba(var(--theme-rgb), 0.9) 225deg, 
         transparent 270deg
     );
-    animation: spinLight 4s linear infinite;
+    animation: spinLight 6s linear infinite; /* خاوترمان کردەوە بۆ ئەوەی سەرنەسووڕێنێت */
+    filter: blur(15px); /* ئەمە نهێنییەکەیە! ڕووناکییەکە زۆر نەرم و بڵاو دەکاتەوە */
     z-index: 0;
 }
 
@@ -197,10 +203,10 @@ h1 {
 
 .score-input input:focus {
     outline: none;
-    border-bottom-color: rgb(var(--theme-rgb, 255,255,255));
-    background: rgba(var(--theme-rgb, 255,255,255), 0.05);
+    border-bottom-color: rgb(var(--theme-rgb));
+    background: linear-gradient(0deg, rgba(var(--theme-rgb), 0.1), transparent);
+    box-shadow: 0 5px 15px -10px rgb(var(--theme-rgb));
 }
-
 /* دوگمەکانی خاڵەکان (هەموویان ڕەنگی داینامیکی وەردەگرن) */
 .value-buttons {
     display: grid;
@@ -209,22 +215,29 @@ h1 {
     margin-bottom: 25px;
 }
 
+/* دوگمەکانی خاڵەکان (قووڵی 3D و سێبەری نیۆن) */
+/* دوگمەکانی خاڵەکان (قووڵی 3D و سێبەری نیۆن لەگەڵ ژمارەی سپی) */
 .value-buttons button {
-    background: #000;
-    border: 2px solid rgba(var(--theme-rgb, 255,255,255), 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(var(--theme-rgb), 0.3);
     padding: 16px 0;
     border-radius: 14px;
     font-size: 1.4rem;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: rgb(var(--theme-rgb, 255,255,255));
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* لێرەدا ڕەنگی ژمارەکانمان کرد بە سپی جێگیر */
+    color: #ffffff; 
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(var(--theme-rgb), 0.1);
 }
 
 .value-buttons button:hover {
-    background: rgba(var(--theme-rgb, 255,255,255), 0.15);
-    box-shadow: 0 0 20px rgba(var(--theme-rgb, 255,255,255), 0.4);
+    background: rgba(var(--theme-rgb), 0.4); /* کەمێک تۆخترمان کرد بۆ ئەوەی سپییەکە لە کاتی هۆڤەر جوانتر دەرکەوێت */
+    border-color: rgba(var(--theme-rgb), 0.8);
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 20px rgba(var(--theme-rgb), 0.4), inset 0 0 15px rgba(var(--theme-rgb), 0.3);
 }
 
 .value-buttons button[value="25"] {

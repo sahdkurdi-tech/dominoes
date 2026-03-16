@@ -145,20 +145,6 @@ function updateCardTheme(id) {
     saveGameState();
 }
 
-function updateCardColors(id) {
-    const bgColor = document.getElementById(`bgColor${id}`).value;
-    const lightColor = document.getElementById(`lightColor${id}`).value;
-    
-    const playerEl = document.getElementById(`player-${id}`);
-    playerEl.style.setProperty('--card-bg-color', bgColor);
-    playerEl.style.setProperty('--light-color', lightColor);
-    
-    // خەزنکردنی ڕەنگەکان لە gameState
-    gameState.players[id].bgColor = bgColor;
-    gameState.players[id].lightColor = lightColor;
-    saveGameState();
-}
-
 function toggleScoreMode(id) {
     const player = gameState.players[id];
     player.isMinus = !player.isMinus;
@@ -180,7 +166,7 @@ function toggleScoreMode(id) {
 
 function addScore(playerId, value) {
     const player = gameState.players[playerId];
-    const isReducing = player.isMinus; // ذخیره وضعیت کاهش امتیاز
+    const isReducing = player.isMinus; 
     const finalValue = isReducing ? -value : value;
     
     player.score += finalValue;
@@ -198,7 +184,7 @@ function addScore(playerId, value) {
         saveGameState(); 
     }
 
-    // شرط جدید: فقط در صورتی که در حال کم کردن امتیاز نباشیم صدا پخش شود
+    // لێدانی دەنگ ئەگەر بێدەنگ نەکرابێت و لە کاتی کەمکردنەوە نەبێت
     if (!isReducing && !gameState.isMuted) {
         let soundFile = '';
         switch (value) {
@@ -211,7 +197,7 @@ function addScore(playerId, value) {
 
         if (soundFile !== '') {
             const audio = new Audio(soundFile);
-            audio.play().catch(e => console.log("خطا در پخش صدا:", e));
+            audio.play().catch(e => console.log("کێشە لە لێدانی دەنگ:", e));
         }
     }
 }
@@ -273,7 +259,6 @@ function closeFinishModal() {
 
 // کاتێک پەنجەی نا بە "بەڵێ، یارییەکە تەواو"
 function confirmFinishGame() {
-    // پەنجەرەکە لادەبەین
     closeFinishModal();
 
     const allButtons = document.querySelectorAll('.value-buttons button, .minus-toggle');
@@ -315,7 +300,6 @@ function confirmFinishGame() {
     if(window.db) {
         window.db.collection("games_archive").add(gameRecord).then(() => {
             localStorage.removeItem('dominoGameState');
-            // چوونە ناو پەڕەی ئەرشیف ڕاستەوخۆ بێ ئەوەی ئالێرت پیشان بدات
             window.location.href = 'archive.html';
         }).catch((error) => {
             console.error("هەڵە هەیە:", error);
@@ -403,17 +387,13 @@ document.addEventListener('click', function enableNoSleep() {
     }
 }, false);
 
-// خستنەگەڕی Service Worker و چاودێریکردنی ڤێرژنی نوێ
-// خستنەگەڕی Service Worker بە شێوەیەکی ڕاست و دروست
+// خستنەگەڕی Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // لێرە کاتە گۆڕاوەکەمان لابرد و تەنها ناوی فایلەکەمان هێشتەوە
         navigator.serviceWorker.register('./sw.js').then(reg => {
-            
             reg.onupdatefound = () => {
                 const installingWorker = reg.installing;
                 installingWorker.onstatechange = () => {
-                    // تەنها ئەگەر ڤێرژنێکی نوێ هەبوو و پێشتر دانەیەک مۆدێل کرابوو ڕیفرێش بکات
                     if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
                         console.log('ڤێرژنێکی نوێ دۆزرایەوە! پەڕەکە نوێ دەبێتەوە...');
                         window.location.reload();
