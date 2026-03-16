@@ -1,5 +1,13 @@
 const PREDEFINED_VALUES = [5, 10, 15, 20, 25];
 
+// گۆڕینی ڕەنگی Hex بۆ RGB
+function hexToRgb(hex) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? 
+        `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` 
+        : '255, 255, 255';
+}
+
 let gameState = {
     isActive: false,
     players: {},
@@ -90,12 +98,21 @@ function addPlayers(count) {
 }
 
 function generatePlayerHTML(id, name) {
+    const player = gameState.players[id];
+    // ڕەنگە بنەڕەتییەکان: یاریزانی دووەم بە شین دەست پێدەکات، ئەوانی تر بە ڕەنگی ئاڵتوونی
+    const themeHex = player.themeHex || (id === 2 ? '#00bfff' : '#d4af37');
+    const themeRgb = hexToRgb(themeHex);
+    
     return `
-        <div class="player-section" id="player-${id}">
+        <div class="player-section" id="player-${id}" style="--theme-rgb: ${themeRgb};">
             <div class="player-header">
                 <h3>یاریزانی ${id}</h3>
-                <button class="minus-toggle" id="toggleMode${id}" onclick="toggleScoreMode(${id})">کەمکردنەوە (-)</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="color" id="themeColor${id}" value="${themeHex}" oninput="updateCardTheme(${id})" class="theme-color-picker" title="گۆڕینی ڕەنگی کارت">
+                    <button class="minus-toggle" id="toggleMode${id}" onclick="toggleScoreMode(${id})">کەمکردنەوە (-)</button>
+                </div>
             </div>
+            
             <div class="score-input">
                 <input type="text" id="name${id}" value="${name}" placeholder="ناوی یاریزان" oninput="saveGameState()">
             </div>
@@ -113,6 +130,33 @@ function generatePlayerHTML(id, name) {
             <div class="history-log" id="history${id}"></div>
         </div>
     `;
+}
+
+function updateCardTheme(id) {
+    const hex = document.getElementById(`themeColor${id}`).value;
+    const rgb = hexToRgb(hex);
+    
+    const playerEl = document.getElementById(`player-${id}`);
+    playerEl.style.setProperty('--theme-rgb', rgb);
+    
+    // خەزنکردنی ڕەنگەکە بۆ ئەوەی لەکاتی ڕیفرێش نەفەوتێت
+    if(!gameState.players[id]) gameState.players[id] = {};
+    gameState.players[id].themeHex = hex;
+    saveGameState();
+}
+
+function updateCardColors(id) {
+    const bgColor = document.getElementById(`bgColor${id}`).value;
+    const lightColor = document.getElementById(`lightColor${id}`).value;
+    
+    const playerEl = document.getElementById(`player-${id}`);
+    playerEl.style.setProperty('--card-bg-color', bgColor);
+    playerEl.style.setProperty('--light-color', lightColor);
+    
+    // خەزنکردنی ڕەنگەکان لە gameState
+    gameState.players[id].bgColor = bgColor;
+    gameState.players[id].lightColor = lightColor;
+    saveGameState();
 }
 
 function toggleScoreMode(id) {
