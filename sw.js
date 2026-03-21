@@ -1,5 +1,5 @@
 // ناوەکەمان گۆڕی بۆ v7 بۆ ئەوەی یەکسەر کاشە کۆنەکەی مۆبایلەکان بسڕێتەوە
-const CACHE_NAME = 'domino-cache-v8.0';
+const CACHE_NAME = 'domino-cache-v9.0';
 const urlsToCache = [
     './',
     './index.html',

@@ -463,3 +463,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// فەنکشنی نوێکردنەوەی ئەپەکە بە زۆر (بۆ سڕینەوەی کاش و هێنانی کۆتا ڤێرژن)
+function forceUpdateApp() {
+    const btn = document.querySelector('.update-btn');
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> چاوەڕێ بە...';
+        btn.style.color = '#d4af37';
+    }
+
+    if ('caches' in window) {
+        // سڕینەوەی هەموو کاشەکانی ناو مۆبایلەکە
+        caches.keys().then(function(names) {
+            return Promise.all(names.map(name => caches.delete(name)));
+        }).then(function() {
+            // دوای سڕینەوەی کاش، سایتەکە ڕیفرێش دەکات
+            window.location.reload(true);
+        }).catch(function(err) {
+            console.log("کێشە لە سڕینەوەی کاش:", err);
+            window.location.reload(true);
+        });
+    } else {
+        // ئەگەر وێبگەڕەکە کاشی نەبوو، ڕاستەوخۆ ڕیفرێش دەکات
+        window.location.reload(true);
+    }
+}

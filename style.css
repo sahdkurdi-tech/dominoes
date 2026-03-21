@@ -532,3 +532,32 @@ h1 {
 @keyframes spinRefresh { 
     100% { transform: rotate(360deg); } 
 }
+
+/* دیزاینی دوگمەی نوێکردنەوەی ئەپ */
+.update-app-container {
+    text-align: center;
+    margin-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.update-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-muted);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update-btn:hover, .update-btn:active {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--gold-main, #d4af37);
+    color: var(--gold-main, #d4af37);
+    transform: translateY(-2px);
+}
