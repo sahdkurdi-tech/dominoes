@@ -498,3 +498,37 @@ h1 {
 }
 
 .hidden { display: none !important; }
+
+/* تایبەتمەندی Pull to Refresh */
+#pull-to-refresh {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45px;
+    height: 45px;
+    background: #111116;
+    border: 2px solid var(--gold-main, #d4af37);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold-main, #d4af37);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    transition: top 0.2s ease;
+    opacity: 0;
+}
+
+#pull-to-refresh.visible {
+    top: 25px;
+    opacity: 1;
+}
+
+#pull-to-refresh.spinning i {
+    animation: spinRefresh 1s linear infinite;
+}
+
+@keyframes spinRefresh { 
+    100% { transform: rotate(360deg); } 
+}

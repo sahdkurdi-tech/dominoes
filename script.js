@@ -403,3 +403,63 @@ if ('serviceWorker' in navigator) {
         }).catch(err => console.log('کێشە لە Service Worker:', err));
     });
 }
+
+// خستنەگەڕی سیستەمی Pull to Refresh
+document.addEventListener("DOMContentLoaded", () => {
+    // دروستکردنی ئایکۆنەکە و خستنە ناو پەڕەکە
+    const ptr = document.createElement("div");
+    ptr.id = "pull-to-refresh";
+    ptr.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    document.body.appendChild(ptr);
+
+    let startY = 0;
+    let isPulling = false;
+    
+    // کاتێک پەنجە دەخرێتە سەر شاشەکە
+    window.addEventListener('touchstart', (e) => {
+        // تەنها ئەگەر لە سەرەوەی پەڕەکە بێت ڕێگە دەدات
+        if (window.scrollY === 0) {
+            startY = e.touches[0].clientY;
+            isPulling = true;
+        }
+    }, { passive: true });
+
+    // کاتێک پەنجە ڕادەکێشرێت
+    window.addEventListener('touchmove', (e) => {
+        if (!isPulling) return;
+        const currentY = e.touches[0].clientY;
+        const walk = currentY - startY;
+        
+        // ئەگەر زیاتر لە 50 پیکسڵ ڕایکێشا
+        if (walk > 50 && window.scrollY === 0) {
+            ptr.classList.add('visible');
+            ptr.style.transform = `translateX(-50%) rotate(${walk}deg)`;
+        } else {
+            ptr.classList.remove('visible');
+        }
+    }, { passive: true });
+
+    // کاتێک پەنجە لەسەر شاشەکە لادەبرێت
+    window.addEventListener('touchend', (e) => {
+        if (!isPulling) return;
+        isPulling = false;
+        
+        const endY = e.changedTouches[0].clientY;
+        const walk = endY - startY;
+
+        // ئەگەر ڕاکێشانەکە زۆر بوو (زیاتر لە 90 پیکسڵ)، سایتەکە نوێ دەکاتەوە
+        if (walk > 90 && window.scrollY === 0) {
+            ptr.classList.add('spinning');
+            ptr.style.transform = `translateX(-50%)`;
+            
+            // دوای نیو چرکە سایتەکە ڕیفرێش دەکات
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        } else {
+            // ئەگەر کەم ڕایکێشابوو، ئایکۆنەکە دەشارێتەوە
+            ptr.classList.remove('visible');
+            ptr.classList.remove('spinning');
+        }
+    });
+});
